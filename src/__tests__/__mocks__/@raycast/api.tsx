@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 
 export const getSelectedFinderItems = jest.fn();
 export const showHUD = jest.fn();
@@ -9,7 +9,15 @@ export const ActionPanel = ({ children }: { children: React.ReactNode }) => (
   <div data-testid="action-panel">{children}</div>
 );
 
-export const Action = ({ title, onAction, icon }: { title: string; onAction: () => void; icon?: any }) => (
+export const Action = ({
+  title,
+  onAction,
+  icon,
+}: {
+  title: string;
+  onAction: () => void;
+  icon?: any;
+}) => (
   <button data-testid="action" onClick={onAction}>
     {title}
   </button>
@@ -21,14 +29,28 @@ Action.OpenInBrowser = ({ url, title }: { url: string; title: string }) => (
   </button>
 );
 
-export const Detail = ({ markdown, actions }: { markdown: string; actions?: React.ReactNode }) => (
+export const Detail = ({
+  markdown,
+  actions,
+}: {
+  markdown: string;
+  actions?: React.ReactNode;
+}) => (
   <div data-testid="detail">
     <div dangerouslySetInnerHTML={{ __html: markdown }} />
     {actions}
   </div>
 );
 
-export const Form = ({ children, isLoading, actions }: { children: React.ReactNode; isLoading: boolean; actions?: React.ReactNode }) => (
+export const Form = ({
+  children,
+  isLoading,
+  actions,
+}: {
+  children: React.ReactNode;
+  isLoading: boolean;
+  actions?: React.ReactNode;
+}) => (
   <form data-testid="form">
     {isLoading && <div data-testid="loading">Loading...</div>}
     {children}
@@ -43,11 +65,17 @@ Form.Description = ({ title, text }: { title: string; text: string }) => (
   </div>
 );
 
-const FormDropdown = ({ children, value, title, info, onChange }: { 
-  children: React.ReactNode; 
-  value: string; 
-  title: string; 
-  info: string; 
+const FormDropdown = ({
+  children,
+  value,
+  title,
+  info,
+  onChange,
+}: {
+  children: React.ReactNode;
+  value: string;
+  title: string;
+  info: string;
   onChange: (value: string) => void;
 }) => (
   <div data-testid="form-dropdown">
@@ -59,26 +87,38 @@ const FormDropdown = ({ children, value, title, info, onChange }: {
   </div>
 );
 
-FormDropdown.Item = ({ value, title, icon }: { value: string; title: string; icon?: any }) => (
-  <option value={value}>{title}</option>
-);
+FormDropdown.Item = ({
+  value,
+  title,
+  icon,
+}: {
+  value: string;
+  title: string;
+  icon?: any;
+}) => <option value={value}>{title}</option>;
 
 Form.Dropdown = FormDropdown;
 
-Form.TextField = ({ value, onChange, title, info, placeholder }: { 
-  value: string; 
-  onChange: (value: string) => void; 
-  title: string; 
-  info: string; 
+Form.TextField = ({
+  value,
+  onChange,
+  title,
+  info,
+  placeholder,
+}: {
+  value: string;
+  onChange: (value: string) => void;
+  title: string;
+  info: string;
   placeholder: string;
 }) => (
   <div data-testid="form-textfield">
     <div>{title}</div>
     <div>{info}</div>
-    <input 
-      type="text" 
-      value={value} 
-      onChange={(e) => onChange(e.target.value)} 
+    <input
+      type="text"
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
       placeholder={placeholder}
     />
   </div>
@@ -88,7 +128,15 @@ export const List = ({ children }: { children: React.ReactNode }) => (
   <div data-testid="list">{children}</div>
 );
 
-List.EmptyView = ({ icon, title, description }: { icon: any; title: string; description: string }) => (
+List.EmptyView = ({
+  icon,
+  title,
+  description,
+}: {
+  icon: any;
+  title: string;
+  description: string;
+}) => (
   <div data-testid="empty-view">
     <div>{title}</div>
     <div>{description}</div>
@@ -96,17 +144,17 @@ List.EmptyView = ({ icon, title, description }: { icon: any; title: string; desc
 );
 
 export const Icon = {
-  Video: "video",
-  Clock: "clock",
-  Play: "play",
-  Folder: "folder",
+  Video: 'video',
+  Clock: 'clock',
+  Play: 'play',
+  Folder: 'folder',
 };
 
 export const Toast = {
   Style: {
-    Success: "success",
-    Failure: "failure",
-    Animated: "animated",
+    Success: 'success',
+    Failure: 'failure',
+    Animated: 'animated',
   },
 };
 

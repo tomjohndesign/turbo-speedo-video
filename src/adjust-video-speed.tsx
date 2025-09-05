@@ -8,71 +8,78 @@ import {
   showToast,
   Toast,
   Icon,
-  Color,
   List,
   showInFinder,
   LaunchProps,
-} from "@raycast/api";
-import { useState, useEffect } from "react";
-import { execFile } from "child_process";
-import { promisify } from "util";
+} from '@raycast/api';
+import { useState, useEffect } from 'react';
+import { execFile } from 'child_process';
+import { promisify } from 'util';
 
 const execFileAsync = promisify(execFile);
-import { VideoProcessor } from "./utils/video-processor";
-import { SpeedMultiplier, SUPPORTED_EXTENSIONS, SPEED_OPTIONS } from "./utils/constants";
+import { VideoProcessor } from './utils/video-processor';
+import {
+  SpeedMultiplier,
+  SUPPORTED_EXTENSIONS,
+  SPEED_OPTIONS,
+} from './utils/constants';
 
 interface FormValues {
   speed: SpeedMultiplier;
   outputPath: string;
 }
 
-export default function AdjustVideoSpeed(props: LaunchProps) {
+export default function AdjustVideoSpeed(_props: LaunchProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [selectedFile, setSelectedFile] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [ffmpegAvailable, setFfmpegAvailable] = useState<boolean | null>(null);
 
-  const [speed, setSpeed] = useState<SpeedMultiplier>("2");
-  const [outputPath, setOutputPath] = useState<string>("");
+  const [speed, setSpeed] = useState<SpeedMultiplier>('2');
+  const [outputPath, setOutputPath] = useState<string>('');
 
   const handleSubmit = async (values: FormValues) => {
-      if (!selectedFile) {
-        showToast({
-          style: Toast.Style.Failure,
-          title: "No file selected",
-          message: "Please select a video file first",
-        });
-        return;
-      }
+    if (!selectedFile) {
+      showToast({
+        style: Toast.Style.Failure,
+        title: 'No file selected',
+        message: 'Please select a video file first',
+      });
+      return;
+    }
 
-      setIsLoading(true);
-      setError(null);
+    setIsLoading(true);
+    setError(null);
 
-      try {
-        const processor = new VideoProcessor();
-        const outputPath = await processor.processVideo(selectedFile, values.speed);
-        
-        showHUD("Video processing completed!");
-        showToast({
-          style: Toast.Style.Success,
-          title: "Success",
-          message: `Video saved to ${outputPath}`,
-        });
-        
-        // Open the output file in Finder
-        await showInFinder(outputPath);
-      } catch (err) {
-        const errorMessage = err instanceof Error ? err.message : "Unknown error occurred";
-        setError(errorMessage);
-        showToast({
-          style: Toast.Style.Failure,
-          title: "Processing failed",
-          message: errorMessage,
-        });
-      } finally {
-        setIsLoading(false);
-      }
-    };
+    try {
+      const processor = new VideoProcessor();
+      const outputPath = await processor.processVideo(
+        selectedFile,
+        values.speed
+      );
+
+      showHUD('Video processing completed!');
+      showToast({
+        style: Toast.Style.Success,
+        title: 'Success',
+        message: `Video saved to ${outputPath}`,
+      });
+
+      // Open the output file in Finder
+      await showInFinder(outputPath);
+    } catch (err) {
+      const errorMessage =
+        err instanceof Error ? err.message : 'Unknown error occurred';
+      setError(errorMessage);
+      showToast({
+        style: Toast.Style.Failure,
+        title: 'Processing failed',
+        message: errorMessage,
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
     checkFfmpegAvailability();
@@ -81,7 +88,7 @@ export default function AdjustVideoSpeed(props: LaunchProps) {
 
   const checkFfmpegAvailability = async () => {
     try {
-      await execFileAsync("/usr/local/bin/ffmpeg", ["-version"]);
+      await execFileAsync('/usr/local/bin/ffmpeg', ['-version']);
       setFfmpegAvailable(true);
     } catch {
       setFfmpegAvailable(false);
@@ -94,12 +101,14 @@ export default function AdjustVideoSpeed(props: LaunchProps) {
       if (selectedItems.length > 0) {
         const file = selectedItems[0];
         const extension = file.path.split('.').pop()?.toLowerCase();
-        
+
         if (extension && SUPPORTED_EXTENSIONS.includes(extension as any)) {
           setSelectedFile(file.path);
-          setOutputPath(generateOutputPath(file.path, "2"));
+          setOutputPath(generateOutputPath(file.path, '2'));
         } else {
-          setError(`Unsupported file format: ${extension}. Supported formats: ${SUPPORTED_EXTENSIONS.join(', ')}`);
+          setError(
+            `Unsupported file format: ${extension}. Supported formats: ${SUPPORTED_EXTENSIONS.join(', ')}`
+          );
         }
       }
     } catch (err) {
@@ -107,7 +116,10 @@ export default function AdjustVideoSpeed(props: LaunchProps) {
     }
   };
 
-  const generateOutputPath = (inputPath: string, speed: SpeedMultiplier): string => {
+  const generateOutputPath = (
+    inputPath: string,
+    speed: SpeedMultiplier
+  ): string => {
     const pathParts = inputPath.split('.');
     const extension = pathParts.pop();
     const basePath = pathParts.join('.');
@@ -149,7 +161,10 @@ After installation, restart Raycast and try again.
         `}
         actions={
           <ActionPanel>
-            <Action.OpenInBrowser url="https://ffmpeg.org/download.html" title="Download FFmpeg" />
+            <Action.OpenInBrowser
+              url="https://ffmpeg.org/download.html"
+              title="Download FFmpeg"
+            />
           </ActionPanel>
         }
       />
@@ -172,14 +187,17 @@ ${error}
 4. Click "Process Video"
 
 ## Supported formats:
-${SUPPORTED_EXTENSIONS.map(ext => `- ${ext}`).join('\n')}
+${SUPPORTED_EXTENSIONS.map((ext) => `- ${ext}`).join('\n')}
         `}
         actions={
           <ActionPanel>
-            <Action title="Try Again" onAction={() => {
-              setError(null);
-              loadSelectedFile();
-            }} />
+            <Action
+              title="Try Again"
+              onAction={() => {
+                setError(null);
+                loadSelectedFile();
+              }}
+            />
           </ActionPanel>
         }
       />
@@ -216,11 +234,8 @@ ${SUPPORTED_EXTENSIONS.map(ext => `- ${ext}`).join('\n')}
         </ActionPanel>
       }
     >
-      <Form.Description
-        title="Selected File"
-        text={selectedFile}
-      />
-      
+      <Form.Description title="Selected File" text={selectedFile} />
+
       <Form.Dropdown
         id="speed"
         value={speed}
@@ -232,11 +247,11 @@ ${SUPPORTED_EXTENSIONS.map(ext => `- ${ext}`).join('\n')}
         }}
       >
         {SPEED_OPTIONS.map((option) => (
-          <Form.Dropdown.Item 
-            key={option.value} 
-            value={option.value} 
-            title={option.label} 
-            icon={option.hasAudioLimit ? Icon.Clock : Icon.Play} 
+          <Form.Dropdown.Item
+            key={option.value}
+            value={option.value}
+            title={option.label}
+            icon={option.hasAudioLimit ? Icon.Clock : Icon.Play}
           />
         ))}
       </Form.Dropdown>
@@ -250,12 +265,7 @@ ${SUPPORTED_EXTENSIONS.map(ext => `- ${ext}`).join('\n')}
         placeholder="Output file path"
       />
 
-      {error && (
-        <Form.Description
-          title="Error"
-          text={error}
-        />
-      )}
+      {error && <Form.Description title="Error" text={error} />}
     </Form>
   );
 }
