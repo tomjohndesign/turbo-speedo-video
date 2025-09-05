@@ -88,10 +88,12 @@ describe('VideoProcessor', () => {
       const command = processor['buildFfmpegCommand'](
         '/input.mp4',
         '/output.mp4',
-        '2'
+        '2',
+        '30',
+        'keep'
       );
 
-      expect(command).toContain('setpts=0.5*PTS');
+      expect(command).toContain('fps=30');
       expect(command).toContain('atempo=2');
       expect(command).toContain('-map');
       expect(command).toContain('[v]');
@@ -102,10 +104,12 @@ describe('VideoProcessor', () => {
       const command = processor['buildFfmpegCommand'](
         '/input.mp4',
         '/output.mp4',
-        '8'
+        '8',
+        '60',
+        'keep'
       );
 
-      expect(command).toContain('setpts=0.125*PTS');
+      expect(command).toContain('fps=60');
       expect(command).toContain('atempo=2,atempo=2,atempo=2');
       expect(command).toContain('-map');
     });
@@ -114,11 +118,28 @@ describe('VideoProcessor', () => {
       const command = processor['buildFfmpegCommand'](
         '/input.mp4',
         '/output.mp4',
-        '10'
+        '10',
+        '24',
+        'keep'
       );
 
-      expect(command).toContain('setpts=0.1*PTS');
+      expect(command).toContain('fps=24');
       expect(command).toContain('atempo=2,atempo=2,atempo=2,atempo=1.25');
+    });
+
+    it('should build command without audio when audio option is remove', () => {
+      const command = processor['buildFfmpegCommand'](
+        '/input.mp4',
+        '/output.mp4',
+        '2',
+        '30',
+        'remove'
+      );
+
+      expect(command).toContain('fps=30');
+      expect(command).toContain('-an');
+      expect(command).not.toContain('-map');
+      expect(command).not.toContain('atempo');
     });
   });
 
@@ -127,10 +148,11 @@ describe('VideoProcessor', () => {
       const command = processor['buildFfmpegCommandNoAudio'](
         '/input.mp4',
         '/output.mp4',
-        '4'
+        '4',
+        '30'
       );
 
-      expect(command).toContain('setpts=0.25*PTS');
+      expect(command).toContain('fps=30');
       expect(command).toContain('-an');
       expect(command).not.toContain('-map');
     });
@@ -157,9 +179,9 @@ describe('VideoProcessor', () => {
         .mockResolvedValueOnce({ stdout: '', stderr: '' } as any) // ffmpeg processing
         .mockResolvedValueOnce({ stdout: '', stderr: '' } as any); // test -f output (verify created)
 
-      const result = await processor.processVideo('/input.mp4', '2');
+      const result = await processor.processVideo('/input.mp4', '2', '30', 'keep');
 
-      expect(result).toBe('/input_x2.mp4');
+      expect(result).toBe('/input_x2_30fps.mp4');
       expect(mockedExecFile).toHaveBeenCalledWith('ffmpeg', expect.any(Array));
     });
 
@@ -172,7 +194,7 @@ describe('VideoProcessor', () => {
         .mockRejectedValueOnce(new Error('File not found')); // test -f input
 
       await expect(
-        processor.processVideo('/nonexistent.mp4', '2')
+        processor.processVideo('/nonexistent.mp4', '2', '30', 'keep')
       ).rejects.toThrow('Input file does not exist');
     });
 
@@ -185,7 +207,7 @@ describe('VideoProcessor', () => {
         .mockResolvedValueOnce({ stdout: '', stderr: '' } as any) // test -f input
         .mockResolvedValueOnce({ stdout: '', stderr: '' } as any); // test -f output (file exists)
 
-      await expect(processor.processVideo('/input.mp4', '2')).rejects.toThrow(
+      await expect(processor.processVideo('/input.mp4', '2', '30', 'keep')).rejects.toThrow(
         'Output file already exists'
       );
     });
@@ -208,7 +230,7 @@ describe('VideoProcessor', () => {
         } as any)
         .mockRejectedValueOnce(new Error('FFmpeg processing failed')); // ffmpeg processing
 
-      await expect(processor.processVideo('/input.mp4', '2')).rejects.toThrow(
+      await expect(processor.processVideo('/input.mp4', '2', '30', 'keep')).rejects.toThrow(
         'FFmpeg processing failed'
       );
     });

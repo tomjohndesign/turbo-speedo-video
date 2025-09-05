@@ -103,7 +103,7 @@ describe('AdjustVideoSpeed', () => {
     });
 
     // Check that output path is updated
-    const outputField = screen.getByDisplayValue('/path/to/video_x2.mp4');
+    const outputField = screen.getByDisplayValue('/path/to/video_x2_30fps.mp4');
     expect(outputField).toBeInTheDocument();
   });
 
@@ -118,7 +118,7 @@ describe('AdjustVideoSpeed', () => {
     const { VideoProcessor } = require('../utils/video-processor');
     const mockProcessVideo = jest
       .fn()
-      .mockResolvedValue('/path/to/video_x2.mp4');
+      .mockResolvedValue('/path/to/video_x2_30fps.mp4');
     VideoProcessor.mockImplementation(() => ({
       processVideo: mockProcessVideo,
     }));
@@ -131,7 +131,7 @@ describe('AdjustVideoSpeed', () => {
     });
 
     await waitFor(() => {
-      expect(mockProcessVideo).toHaveBeenCalledWith('/path/to/video.mp4', '2');
+      expect(mockProcessVideo).toHaveBeenCalledWith('/path/to/video.mp4', '2', '30', 'keep');
     });
   });
 

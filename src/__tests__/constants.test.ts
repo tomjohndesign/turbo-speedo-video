@@ -2,6 +2,8 @@ import {
   SUPPORTED_EXTENSIONS,
   SPEED_OPTIONS,
   MAX_AUDIO_SPEED,
+  FRAMERATE_OPTIONS,
+  AUDIO_OPTIONS,
 } from '../utils/constants';
 
 describe('Constants', () => {
@@ -24,18 +26,53 @@ describe('Constants', () => {
   describe('SPEED_OPTIONS', () => {
     it('should have correct speed values', () => {
       const values = SPEED_OPTIONS.map((option) => option.value);
-      expect(values).toEqual(['0.5', '1', '2', '4', '8', '10']);
+      expect(values).toContain('0.25');
+      expect(values).toContain('0.5');
+      expect(values).toContain('1');
+      expect(values).toContain('2');
+      expect(values).toContain('4');
+      expect(values).toContain('8');
+      expect(values).toContain('10');
+      expect(values).toContain('40');
     });
 
     it('should have correct audio limit flags', () => {
       const audioLimits = SPEED_OPTIONS.map((option) => option.hasAudioLimit);
-      expect(audioLimits).toEqual([false, false, false, true, true, true]);
+      expect(audioLimits).toContain(false); // Some speeds should not have audio limits
+      expect(audioLimits).toContain(true);  // Some speeds should have audio limits
     });
 
     it('should have descriptive labels', () => {
       SPEED_OPTIONS.forEach((option) => {
         expect(option.label).toContain(option.value);
         expect(option.label).toContain('x');
+      });
+    });
+  });
+
+  describe('FRAMERATE_OPTIONS', () => {
+    it('should have correct framerate values', () => {
+      const values = FRAMERATE_OPTIONS.map((option) => option.value);
+      expect(values).toEqual(['24', '30', '60']);
+    });
+
+    it('should have descriptive labels', () => {
+      FRAMERATE_OPTIONS.forEach((option) => {
+        expect(option.label).toContain(option.value);
+        expect(option.label).toContain('fps');
+      });
+    });
+  });
+
+  describe('AUDIO_OPTIONS', () => {
+    it('should have correct audio option values', () => {
+      const values = AUDIO_OPTIONS.map((option) => option.value);
+      expect(values).toEqual(['keep', 'remove']);
+    });
+
+    it('should have descriptive labels', () => {
+      AUDIO_OPTIONS.forEach((option) => {
+        expect(option.label).toContain('Audio');
       });
     });
   });

@@ -6,7 +6,7 @@
   "type": "commonjs",
   "scripts": {
     "dev": "echo 'Install Raycast CLI: npm install -g @raycast/cli && raycast dev'",
-    "build": "tsc && cp dist/index.js . && cp dist/index.d.ts . && cp -r dist/utils . && cp dist/adjust-video-speed.js . && cp dist/adjust-video-speed.d.ts . && cp -r utils /Users/tom/.config/raycast/extensions/turbo-speedo-video/ 2>/dev/null || echo 'Note: Raycast extensions directory not found - copy utils folder manually if needed' && echo 'Build complete! Extension ready for Raycast'",
+    "build": "tsc && cp dist/index.js . && cp dist/index.d.ts . && cp -r dist/utils . && cp dist/adjust-video-speed.js . && cp dist/adjust-video-speed.d.ts . && cp dist/remove-audio.js . && cp dist/remove-audio.d.ts . && cp dist/change-framerate.js . && cp dist/change-framerate.d.ts . && cp -r utils /Users/tom/.config/raycast/extensions/turbo-speedo-video/ 2>/dev/null || echo 'Note: Raycast extensions directory not found - copy utils folder manually if needed' && echo 'Build complete! Extension ready for Raycast'",
     "publish": "npx @raycast/api@latest publish",
     "test": "jest",
     "test:watch": "jest --watch",
@@ -39,7 +39,35 @@
     {
       "name": "adjust-video-speed",
       "title": "Adjust Video Speed",
-      "description": "Change video playback speed with FFmpeg",
+      "description": "Change video playback speed, framerate, and audio with FFmpeg",
+      "mode": "view",
+      "arguments": [
+        {
+          "name": "filePath",
+          "placeholder": "Video file path",
+          "type": "text",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "name": "remove-audio",
+      "title": "Remove Audio",
+      "description": "Remove audio from video while adjusting speed and framerate",
+      "mode": "view",
+      "arguments": [
+        {
+          "name": "filePath",
+          "placeholder": "Video file path",
+          "type": "text",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "name": "change-framerate",
+      "title": "Change Framerate",
+      "description": "Change video framerate with optional speed and audio adjustments",
       "mode": "view",
       "arguments": [
         {

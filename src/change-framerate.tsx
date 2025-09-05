@@ -35,13 +35,13 @@ interface FormValues {
   outputPath: string;
 }
 
-export default function AdjustVideoSpeed(_props: LaunchProps) {
+export default function ChangeFramerate(_props: LaunchProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [selectedFile, setSelectedFile] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [ffmpegAvailable, setFfmpegAvailable] = useState<boolean | null>(null);
 
-  const [speed, setSpeed] = useState<SpeedMultiplier>('2');
+  const [speed, setSpeed] = useState<SpeedMultiplier>('1'); // Default to normal speed
   const [framerate, setFramerate] = useState<Framerate>('30');
   const [audio, setAudio] = useState<AudioOption>('keep');
   const [outputPath, setOutputPath] = useState<string>('');
@@ -114,7 +114,7 @@ export default function AdjustVideoSpeed(_props: LaunchProps) {
 
         if (extension && SUPPORTED_EXTENSIONS.includes(extension as any)) {
           setSelectedFile(file.path);
-          setOutputPath(generateOutputPath(file.path, '2', '30', 'keep'));
+          setOutputPath(generateOutputPath(file.path, '1', '30', 'keep'));
         } else {
           setError(
             `Unsupported file format: ${extension}. Supported formats: ${SUPPORTED_EXTENSIONS.join(', ')}`
@@ -136,7 +136,8 @@ export default function AdjustVideoSpeed(_props: LaunchProps) {
     const extension = pathParts.pop();
     const basePath = pathParts.join('.');
     const audioSuffix = audio === 'remove' ? '_noaudio' : '';
-    return `${basePath}_x${speed}_${framerate}fps${audioSuffix}.${extension}`;
+    const speedSuffix = speed === '1' ? '' : `_x${speed}`;
+    return `${basePath}${speedSuffix}_${framerate}fps${audioSuffix}.${extension}`;
   };
 
   const handleSpeedChange = (speed: SpeedMultiplier) => {
@@ -210,7 +211,7 @@ ${error}
 
 1. Select a video file in Finder
 2. Open this Raycast command
-3. Choose your desired speed multiplier
+3. Choose your desired framerate and other options
 4. Click "Process Video"
 
 ## Supported formats:
@@ -249,7 +250,7 @@ ${SUPPORTED_EXTENSIONS.map((ext) => `- ${ext}`).join('\n')}
       actions={
         <ActionPanel>
           <Action
-            title="Process Video"
+            title="Process Video (Change Framerate)"
             icon={Icon.Video}
             onAction={() => handleSubmit({ speed, framerate, audio, outputPath })}
           />
@@ -261,27 +262,12 @@ ${SUPPORTED_EXTENSIONS.map((ext) => `- ${ext}`).join('\n')}
         </ActionPanel>
       }
     >
-      <Form.Description title="Selected File" text={selectedFile} />
+      <Form.Description 
+        title="Change Framerate" 
+        text="This command focuses on changing the video framerate. You can also adjust speed and audio options." 
+      />
 
-      <Form.Dropdown
-        id="speed"
-        value={speed}
-        title="Speed Multiplier"
-        info="Choose how much faster/slower to play the video (0.25x - 40x)"
-        onChange={(value) => {
-          const speed = value as SpeedMultiplier;
-          handleSpeedChange(speed);
-        }}
-      >
-        {SPEED_OPTIONS.map((option) => (
-          <Form.Dropdown.Item
-            key={option.value}
-            value={option.value}
-            title={option.label}
-            icon={option.hasAudioLimit ? Icon.Clock : Icon.Play}
-          />
-        ))}
-      </Form.Dropdown>
+      <Form.Description title="Selected File" text={selectedFile} />
 
       <Form.Dropdown
         id="framerate"
@@ -299,6 +285,26 @@ ${SUPPORTED_EXTENSIONS.map((ext) => `- ${ext}`).join('\n')}
             value={option.value}
             title={option.label}
             icon={Icon.Video}
+          />
+        ))}
+      </Form.Dropdown>
+
+      <Form.Dropdown
+        id="speed"
+        value={speed}
+        title="Speed Multiplier"
+        info="Choose how much faster/slower to play the video (optional)"
+        onChange={(value) => {
+          const speed = value as SpeedMultiplier;
+          handleSpeedChange(speed);
+        }}
+      >
+        {SPEED_OPTIONS.map((option) => (
+          <Form.Dropdown.Item
+            key={option.value}
+            value={option.value}
+            title={option.label}
+            icon={option.hasAudioLimit ? Icon.Clock : Icon.Play}
           />
         ))}
       </Form.Dropdown>

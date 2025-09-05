@@ -21,21 +21,18 @@ import { VideoProcessor } from './utils/video-processor';
 import {
   SpeedMultiplier,
   Framerate,
-  AudioOption,
   SUPPORTED_EXTENSIONS,
   SPEED_OPTIONS,
   FRAMERATE_OPTIONS,
-  AUDIO_OPTIONS,
 } from './utils/constants';
 
 interface FormValues {
   speed: SpeedMultiplier;
   framerate: Framerate;
-  audio: AudioOption;
   outputPath: string;
 }
 
-export default function AdjustVideoSpeed(_props: LaunchProps) {
+export default function RemoveAudio(_props: LaunchProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [selectedFile, setSelectedFile] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -43,7 +40,6 @@ export default function AdjustVideoSpeed(_props: LaunchProps) {
 
   const [speed, setSpeed] = useState<SpeedMultiplier>('2');
   const [framerate, setFramerate] = useState<Framerate>('30');
-  const [audio, setAudio] = useState<AudioOption>('keep');
   const [outputPath, setOutputPath] = useState<string>('');
 
   const handleSubmit = async (values: FormValues) => {
@@ -65,7 +61,7 @@ export default function AdjustVideoSpeed(_props: LaunchProps) {
         selectedFile,
         values.speed,
         values.framerate,
-        values.audio
+        'remove' // Always remove audio for this command
       );
 
       showHUD('Video processing completed!');
@@ -114,7 +110,7 @@ export default function AdjustVideoSpeed(_props: LaunchProps) {
 
         if (extension && SUPPORTED_EXTENSIONS.includes(extension as any)) {
           setSelectedFile(file.path);
-          setOutputPath(generateOutputPath(file.path, '2', '30', 'keep'));
+          setOutputPath(generateOutputPath(file.path, '2', '30'));
         } else {
           setError(
             `Unsupported file format: ${extension}. Supported formats: ${SUPPORTED_EXTENSIONS.join(', ')}`
@@ -129,34 +125,25 @@ export default function AdjustVideoSpeed(_props: LaunchProps) {
   const generateOutputPath = (
     inputPath: string,
     speed: SpeedMultiplier,
-    framerate: Framerate,
-    audio: AudioOption
+    framerate: Framerate
   ): string => {
     const pathParts = inputPath.split('.');
     const extension = pathParts.pop();
     const basePath = pathParts.join('.');
-    const audioSuffix = audio === 'remove' ? '_noaudio' : '';
-    return `${basePath}_x${speed}_${framerate}fps${audioSuffix}.${extension}`;
+    return `${basePath}_x${speed}_${framerate}fps_noaudio.${extension}`;
   };
 
   const handleSpeedChange = (speed: SpeedMultiplier) => {
     setSpeed(speed);
     if (selectedFile) {
-      setOutputPath(generateOutputPath(selectedFile, speed, framerate, audio));
+      setOutputPath(generateOutputPath(selectedFile, speed, framerate));
     }
   };
 
   const handleFramerateChange = (framerate: Framerate) => {
     setFramerate(framerate);
     if (selectedFile) {
-      setOutputPath(generateOutputPath(selectedFile, speed, framerate, audio));
-    }
-  };
-
-  const handleAudioChange = (audio: AudioOption) => {
-    setAudio(audio);
-    if (selectedFile) {
-      setOutputPath(generateOutputPath(selectedFile, speed, framerate, audio));
+      setOutputPath(generateOutputPath(selectedFile, speed, framerate));
     }
   };
 
@@ -210,8 +197,8 @@ ${error}
 
 1. Select a video file in Finder
 2. Open this Raycast command
-3. Choose your desired speed multiplier
-4. Click "Process Video"
+3. Choose your desired speed multiplier and framerate
+4. Click "Process Video" (audio will be removed)
 
 ## Supported formats:
 ${SUPPORTED_EXTENSIONS.map((ext) => `- ${ext}`).join('\n')}
@@ -249,9 +236,9 @@ ${SUPPORTED_EXTENSIONS.map((ext) => `- ${ext}`).join('\n')}
       actions={
         <ActionPanel>
           <Action
-            title="Process Video"
-            icon={Icon.Video}
-            onAction={() => handleSubmit({ speed, framerate, audio, outputPath })}
+            title="Process Video (Remove Audio)"
+            icon={Icon.SpeakerOff}
+            onAction={() => handleSubmit({ speed, framerate, outputPath })}
           />
           <Action
             title="Select Different File"
@@ -261,6 +248,11 @@ ${SUPPORTED_EXTENSIONS.map((ext) => `- ${ext}`).join('\n')}
         </ActionPanel>
       }
     >
+      <Form.Description 
+        title="Remove Audio" 
+        text="This command will process your video and remove all audio tracks. Only video will be preserved." 
+      />
+
       <Form.Description title="Selected File" text={selectedFile} />
 
       <Form.Dropdown
@@ -303,32 +295,12 @@ ${SUPPORTED_EXTENSIONS.map((ext) => `- ${ext}`).join('\n')}
         ))}
       </Form.Dropdown>
 
-      <Form.Dropdown
-        id="audio"
-        value={audio}
-        title="Audio"
-        info="Choose whether to keep or remove audio from the processed video"
-        onChange={(value) => {
-          const audio = value as AudioOption;
-          handleAudioChange(audio);
-        }}
-      >
-        {AUDIO_OPTIONS.map((option) => (
-          <Form.Dropdown.Item
-            key={option.value}
-            value={option.value}
-            title={option.label}
-            icon={option.value === 'keep' ? Icon.SpeakerHigh : Icon.SpeakerOff}
-          />
-        ))}
-      </Form.Dropdown>
-
       <Form.TextField
         id="outputPath"
         value={outputPath}
         onChange={setOutputPath}
         title="Output Path"
-        info="Where to save the processed video"
+        info="Where to save the processed video (audio will be removed)"
         placeholder="Output file path"
       />
 
