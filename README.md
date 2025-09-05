@@ -38,7 +38,15 @@ A Raycast extension to adjust video playback speed using FFmpeg. Speed up or slo
 
 ## Installation
 
-This extension will be available in the Raycast Store once published.
+🚀 **Status: Pending Publication** - This extension has been submitted to the Raycast Store and is currently under review.
+
+**Expected Availability**: 1-3 business days after submission
+
+Once approved, you'll be able to install it directly from Raycast:
+1. Open Raycast (`Cmd + Space`)
+2. Go to Extensions → Browse Extensions
+3. Search for "Turbo Speedo Video"
+4. Click Install
 
 ## Development
 
@@ -52,9 +60,20 @@ npm run build
 # Run tests
 npm test
 
-# Publish to Raycast Store
+# Format code
+npm run format
+
+# Lint code
+npm run lint
+
+# Publish to Raycast Store (already submitted)
 npm run publish
 ```
+
+### Prerequisites for Development
+- Node.js 16+ 
+- FFmpeg installed on your system (`brew install ffmpeg`)
+- Raycast app installed
 
 ## Contributing
 
@@ -74,13 +93,30 @@ This project follows the [Contributor Covenant Code of Conduct](CODE_OF_CONDUCT.
 
 Please see our [Security Policy](SECURITY.md) for information about reporting security vulnerabilities.
 
+## Submission Status
+
+🎯 **Currently Under Review** - [PR #21389](https://github.com/raycast/extensions/pull/21389)
+
+This extension has been submitted to the Raycast Store and is pending review by the Raycast team. The submission includes:
+- ✅ Complete functionality testing
+- ✅ Code quality validation (ESLint, Prettier)
+- ✅ Professional UI/UX design
+- ✅ Comprehensive error handling
+- ✅ Security review compliance
+
 ## Roadmap
 
+### v1.1.0 (Planned)
 - [ ] Batch processing multiple videos
 - [ ] Custom speed presets
 - [ ] Progress indicators for long operations
 - [ ] Video preview before processing
+
+### v1.2.0 (Future)
 - [ ] Support for more video formats
+- [ ] Audio-only processing mode
+- [ ] Custom output quality settings
+- [ ] Integration with video editing workflows
 
 ## Troubleshooting
 

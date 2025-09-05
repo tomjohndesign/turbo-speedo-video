@@ -1,7 +1,7 @@
 {
   "name": "turbo-speedo-video",
   "version": "1.0.0",
-  "description": "A Raycast extension to adjust video playback speed using FFmpeg",
+  "description": "A Raycast extension to adjust video playback speed using FFmpeg - Currently pending publication in Raycast Store",
   "main": "index.js",
   "type": "commonjs",
   "scripts": {
@@ -21,7 +21,9 @@
     "video",
     "ffmpeg",
     "speed",
-    "multiplier"
+    "multiplier",
+    "pending-publication",
+    "raycast-store"
   ],
   "author": "tom",
   "license": "MIT",

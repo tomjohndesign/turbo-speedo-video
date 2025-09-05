@@ -8,7 +8,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- Initial release preparation
+- Extension submitted to Raycast Store for review
+- Comprehensive documentation updates
+- Community files and contribution guidelines
+
+## [1.0.1] - 2025-01-27
+
+### Changed
+- Updated README with pending publication status
+- Improved development documentation
+- Enhanced roadmap with version planning
 
 ## [1.0.0] - 2025-01-27
 

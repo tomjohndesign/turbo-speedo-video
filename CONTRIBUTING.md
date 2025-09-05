@@ -2,6 +2,8 @@
 
 Thank you for your interest in contributing to Turbo Speedo Video! This document provides guidelines and information for contributors.
 
+> **Note**: This extension is currently pending publication in the Raycast Store. Once approved and published, contributions will be welcome for future versions.
+
 ## Table of Contents
 
 - [Code of Conduct](#code-of-conduct)
@@ -26,6 +28,8 @@ This project follows the [Contributor Covenant Code of Conduct](CODE_OF_CONDUCT.
 - Raycast (for testing)
 
 ### Development Setup
+
+> **Current Status**: The extension is pending publication in the Raycast Store. Development contributions will be welcome after the initial release.
 
 1. **Fork the repository**
    ```bash
